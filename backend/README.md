@@ -89,13 +89,18 @@ CREATE USER estacion_app WITH PASSWORD 'CAMBIAR_ESTA_CLAVE';
 GRANT ALL PRIVILEGES ON DATABASE estacion TO estacion_app;
 SQL
 
-# Cargar el esquema
-sudo -u postgres psql -d estacion -f ~/estacion_ambiental_iquitos/backend/sql/schema.sql
+# Cargar el esquema (desde /tmp: el usuario postgres no puede leer /home/ubuntu)
+cp ~/estacion_ambiental_iquitos/backend/sql/schema.sql /tmp/schema.sql
+cd /tmp && sudo -u postgres psql -d estacion -f /tmp/schema.sql && rm /tmp/schema.sql
 
-# Dar permisos al usuario de app sobre las tablas creadas
+# Transferir la propiedad de tablas y secuencias al usuario de la app.
+# (GRANT no basta: el backend ejecuta CREATE INDEX IF NOT EXISTS al arrancar,
+#  y eso exige ser dueño de la tabla aunque el índice ya exista.)
 sudo -u postgres psql -d estacion <<'SQL'
-GRANT ALL ON ALL TABLES IN SCHEMA public TO estacion_app;
-GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO estacion_app;
+ALTER TABLE lecturas OWNER TO estacion_app;
+ALTER TABLE alertas  OWNER TO estacion_app;
+ALTER SEQUENCE lecturas_id_seq OWNER TO estacion_app;
+ALTER SEQUENCE alertas_id_seq  OWNER TO estacion_app;
 SQL
 ```
 

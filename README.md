@@ -32,17 +32,17 @@ ESP32 (Iquitos) ──MQTT──▶ Mosquitto (:1883) ──▶ Backend Node.js 
 
 - **v2.4:** calibración corregida (MQ-7, MQ-135, ADC por eFuse) + publicación MQTT cada 60 s.
 - **v2.5 (actual):** v2.4 + comandos remotos por MQTT (recalibrar, portal WiFi, set_wifi)
-  + WiFiManager (portal cautivo `Estacion-Iquitos-Setup` para cambiar de red sin reflashear)
-  + botón BOOT: pulsación corta = recalibrar, larga (≥3 s) = portal WiFi.
+  - WiFiManager (portal cautivo `Estacion-Iquitos-Setup` para cambiar de red sin reflashear)
+  - botón BOOT: pulsación corta = recalibrar, larga (≥3 s) = portal WiFi.
 
 ## Estado del proyecto
 
-| Fase | Descripción                                        | Estado      |
-| ---- | -------------------------------------------------- | ----------- |
-| 1–10 | Hardware, sensores, alertas locales, cloud + MQTT  | ✅ Completo  |
-| 11   | Firmware con calibración corregida + MQTT (v2.4/v2.5) | ✅ Completo |
-| 12   | PostgreSQL + backend Node.js + API REST            | ✅ Código listo — desplegar en la VM |
-| 13   | Dashboard web (valores, gráficas, historial, mapa) | ⏳ Pendiente |
-| 14   | Bot de Telegram                                    | ⏳ Pendiente |
+| Fase | Descripción                                           | Estado                               |
+| ---- | ----------------------------------------------------- | ------------------------------------ |
+| 1–10 | Hardware, sensores, alertas locales, cloud + MQTT     | ✅ Completo                          |
+| 11   | Firmware con calibración corregida + MQTT (v2.4/v2.5) | ✅ Completo                          |
+| 12   | PostgreSQL + backend Node.js + API REST               | ✅ Código listo — desplegar en la VM |
+| 13   | Dashboard web (valores, gráficas, historial, mapa)    | ⏳ Pendiente                         |
+| 14   | Bot de Telegram                                       | ⏳ Pendiente                         |
 
 El despliegue del backend en la VM está documentado paso a paso en [`backend/README.md`](backend/README.md).
