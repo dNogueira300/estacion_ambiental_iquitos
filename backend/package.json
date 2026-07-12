@@ -1,0 +1,21 @@
+{
+  "name": "estacion-iquitos-backend",
+  "version": "1.0.0",
+  "description": "Backend de la Estación Ambiental Inteligente de Iquitos: ingesta MQTT -> PostgreSQL + API REST",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "schema": "psql \"$DATABASE_URL\" -f sql/schema.sql"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "mqtt": "^5.10.1",
+    "pg": "^8.13.1"
+  }
+}

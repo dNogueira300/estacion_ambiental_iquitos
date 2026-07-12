@@ -1,0 +1,15 @@
+[Unit]
+Description=Backend Estacion Ambiental Iquitos
+After=network.target postgresql.service mosquitto.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/estacion_ambiental_iquitos/backend
+ExecStart=/usr/bin/node src/index.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

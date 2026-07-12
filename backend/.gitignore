@@ -1,0 +1,8 @@
+# Credenciales reales: NUNCA commitear
+.env
+
+# Dependencias
+node_modules/
+
+# Logs
+*.log
