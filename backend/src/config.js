@@ -54,6 +54,20 @@ const config = {
     // Límite duro de filas por consulta para no saturar la VM
     maxRows: 5000,
   },
+  // Bot de Telegram (opcional: sin token/chat, el bot queda desactivado
+  // y el backend funciona igual — por eso NO entra en OBLIGATORIAS)
+  telegram: {
+    token: process.env.TELEGRAM_BOT_TOKEN || '',
+    chatId: process.env.TELEGRAM_CHAT_ID || '', // canal: '@nombre_canal' o '-100...'
+    notificarPrecaucion: process.env.TELEGRAM_NOTIFICAR_PRECAUCION !== 'false',
+    dashboardUrl: process.env.DASHBOARD_URL || 'http://163.176.139.242:3000/',
+    // Horas de los reportes diarios, en hora de Perú (America/Lima)
+    horasReporte: (process.env.TELEGRAM_HORAS_REPORTE || '07:00,18:00')
+      .split(',')
+      .map((h) => h.trim())
+      .sort(),
+    habilitado: Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID),
+  },
 };
 
 module.exports = config;

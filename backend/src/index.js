@@ -12,6 +12,7 @@ const cors = require('cors');
 const config = require('./config');
 const db = require('./db');
 const ingestor = require('./mqttIngestor');
+const telegramBot = require('./telegramBot');
 const readingsRouter = require('./routes/readings');
 const alertsRouter = require('./routes/alerts');
 const statusRouter = require('./routes/status');
@@ -63,6 +64,7 @@ async function main() {
   });
 
   await ingestor.iniciar();
+  telegramBot.iniciar();
 
   // ── Cierre ordenado ──
   let cerrando = false;
@@ -71,6 +73,7 @@ async function main() {
     cerrando = true;
     console.log(`\n[main] Recibido ${senal}, cerrando...`);
     servidor.close();
+    telegramBot.cerrar();
     await ingestor.cerrar();
     await db.cerrar();
     process.exit(0);

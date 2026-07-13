@@ -22,11 +22,15 @@ ESP32 (Iquitos) ──MQTT──▶ Mosquitto (:1883) ──▶ Backend Node.js 
 
 ## Estructura del repositorio
 
-| Carpeta      | Contenido                                                                        |
-| ------------ | -------------------------------------------------------------------------------- |
-| `firmware/`  | Sketches de Arduino para el ESP32 (v2.4 y v2.5)                                  |
-| `backend/`   | Servicio Node.js: ingesta MQTT → PostgreSQL + API REST (ver `backend/README.md`) |
-| `dashboard/` | Dashboard web — fase siguiente, aún vacío                                        |
+| Carpeta      | Contenido                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------ |
+| `firmware/`  | Sketches de Arduino para el ESP32 (v2.4 y v2.5)                                            |
+| `backend/`   | Servicio Node.js: ingesta MQTT → PostgreSQL + API REST + bot de Telegram (`backend/README.md`) |
+| `dashboard/` | Dashboard web (Vite + React + TS) — en producción en `http://163.176.139.242:3000/`        |
+
+**Canal de avisos:** [t.me/EstacionAmbientalIquitos](https://t.me/EstacionAmbientalIquitos) —
+alertas en vivo y reportes diarios (07:00 y 18:00). Consultas: chat privado con
+[@EstacionIquitosBot](https://t.me/EstacionIquitosBot) (`/estado`, `/alertas`, `/umbrales`).
 
 ## Firmware
 
@@ -42,7 +46,7 @@ ESP32 (Iquitos) ──MQTT──▶ Mosquitto (:1883) ──▶ Backend Node.js 
 | 1–10 | Hardware, sensores, alertas locales, cloud + MQTT     | ✅ Completo                          |
 | 11   | Firmware con calibración corregida + MQTT (v2.4/v2.5) | ✅ Completo                          |
 | 12   | PostgreSQL + backend Node.js + API REST               | ✅ Código listo — desplegar en la VM |
-| 13   | Dashboard web (valores, gráficas, historial, mapa)    | ⏳ Pendiente                         |
-| 14   | Bot de Telegram                                       | ⏳ Pendiente                         |
+| 13   | Dashboard web (valores, gráficas, historial)          | ✅ En producción                     |
+| 14   | Bot de Telegram (alertas + reportes + consultas)      | ✅ En producción                     |
 
 El despliegue del backend en la VM está documentado paso a paso en [`backend/README.md`](backend/README.md).

@@ -206,6 +206,39 @@ journalctl -u estacion-backend -f   # logs en vivo
    mosquitto_sub -h localhost -u estacion -P '<clave>' -t 'estacion/iquitos/comandos' -v
    ```
 
+## Bot de Telegram (@EstacionIquitosBot)
+
+Corre dentro del mismo proceso, sin dependencias nuevas. Publica en el canal
+**t.me/EstacionAmbientalIquitos** y responde consultas en chat privado.
+
+- **Notifica** al canal: apertura/escalada/cierre de episodios de alerta,
+  desconexión/reconexión de la estación (>5 min sin lecturas) y **reportes diarios**
+  a las 07:00 y 18:00 hora de Perú (con resumen del periodo). Todos los mensajes
+  llevan el enlace al dashboard.
+- **Comandos** (en chat privado con el bot): `/estado`, `/alertas`, `/umbrales`, `/ayuda`.
+- **Idempotente ante reinicios:** el estado "ya notificado" vive en la BD
+  (columnas `notif_*` de `alertas` y tabla `bot_reportes`); un restart no duplica avisos
+  y los episodios históricos previos al bot no generan ráfaga de mensajes.
+- **Opcional:** sin `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` en el `.env`, el bot queda
+  desactivado (log `[telegram] Desactivado`) y el backend funciona igual.
+
+Variables (ver `.env.example`): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`
+(`@EstacionAmbientalIquitos`), `TELEGRAM_NOTIFICAR_PRECAUCION`, `TELEGRAM_HORAS_REPORTE`,
+`DASHBOARD_URL`.
+
+> ⚠️ **No correr dos instancias con el mismo token** (p. ej. local y VM a la vez):
+> `getUpdates` devuelve conflicto 409 y los comandos dejan de responder en una de las dos.
+> Para probar en local, detener antes el servicio de la VM o usar otro bot de prueba.
+
+Prueba rápida de aceptación (con el servicio corriendo):
+
+```bash
+journalctl -u estacion-backend | grep telegram   # "[telegram] Bot activo (chat: ...)"
+# Simular un episodio (ver sección de pruebas más arriba) → deben llegar al canal
+# los mensajes de apertura y cierre, una sola vez, con el enlace al dashboard.
+# En chat privado con @EstacionIquitosBot: /estado responde la última lectura.
+```
+
 ## Seguridad
 
 - `.env` y `node_modules/` están en `.gitignore`. **Nunca** commitear credenciales.
@@ -213,3 +246,6 @@ journalctl -u estacion-backend -f   # logs en vivo
 - Endpoints de datos: abiertos deliberadamente (datos ambientales públicos, solo lectura).
 - Endpoints de comando: protegidos con `COMMAND_TOKEN` (generar con `openssl rand -hex 32`).
 - Contraseña de PostgreSQL distinta de la de MQTT y distinta del `COMMAND_TOKEN`.
+- Token del bot de Telegram solo en `.env`; el código nunca loguea URLs de
+  `api.telegram.org` (contienen el token en la ruta). El bot es de solo lectura:
+  consulta la BD, jamás publica en MQTT ni dispara comandos de la estación.

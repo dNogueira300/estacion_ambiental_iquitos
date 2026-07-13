@@ -35,3 +35,15 @@ CREATE TABLE IF NOT EXISTS alertas (
 );
 
 CREATE INDEX IF NOT EXISTS idx_alertas_inicio ON alertas (inicio_ts DESC);
+
+-- Estado de notificación por Telegram (fase 14). NULL = aún no notificado.
+ALTER TABLE alertas ADD COLUMN IF NOT EXISTS notif_inicio_ts TIMESTAMPTZ;
+ALTER TABLE alertas ADD COLUMN IF NOT EXISTS notif_fin_ts    TIMESTAMPTZ;
+ALTER TABLE alertas ADD COLUMN IF NOT EXISTS notif_nivel     TEXT;
+
+-- Reportes diarios del bot ya enviados (slot = 'AAAA-MM-DD-HH' en hora de Lima).
+-- INSERT ... ON CONFLICT DO NOTHING = idempotente ante reinicios.
+CREATE TABLE IF NOT EXISTS bot_reportes (
+  slot       TEXT PRIMARY KEY,
+  enviado_ts TIMESTAMPTZ NOT NULL DEFAULT now()
+);
