@@ -35,9 +35,13 @@ alertas en vivo y reportes diarios (07:00 y 18:00). Consultas: chat privado con
 ## Firmware
 
 - **v2.4:** calibración corregida (MQ-7, MQ-135, ADC por eFuse) + publicación MQTT cada 60 s.
-- **v2.5 (actual):** v2.4 + comandos remotos por MQTT (recalibrar, portal WiFi, set_wifi)
+- **v2.5:** v2.4 + comandos remotos por MQTT (recalibrar, portal WiFi, set_wifi)
   - WiFiManager (portal cautivo `Estacion-Iquitos-Setup` para cambiar de red sin reflashear)
   - botón BOOT: pulsación corta = recalibrar, larga (≥3 s) = portal WiFi.
+- **v2.5.1 (actual):** v2.5 + umbral de PRECAUCIÓN de calidad de aire 1000→1200 ppm +
+  **compensación climática del MQ-135** (modelo de G. Krocker: Rs normalizada por
+  temperatura/humedad del DHT22, aplicada en calibración y medición). Tras flashear,
+  **recalibrar** en aire limpio y ventilado (el R0 previo no es comparable).
 
 ## Estado del proyecto
 

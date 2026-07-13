@@ -22,9 +22,10 @@ export const UMBRALES: Record<MetricKey, Threshold> = {
     ],
   },
   co2: {
-    nivel: (v) => (v > 2000 ? 'PELIGRO' : v > 1000 ? 'PRECAUCION' : 'NORMAL'),
+    // v2.5.1: precaución subida de 1000 a 1200 (línea base local elevada)
+    nivel: (v) => (v > 2000 ? 'PELIGRO' : v > 1200 ? 'PRECAUCION' : 'NORMAL'),
     lineas: [
-      { valor: 1000, etiqueta: 'precaución 1000', nivel: 'PRECAUCION' },
+      { valor: 1200, etiqueta: 'precaución 1200', nivel: 'PRECAUCION' },
       { valor: 2000, etiqueta: 'peligro 2000', nivel: 'PELIGRO' },
     ],
   },
@@ -74,7 +75,7 @@ export const RANGOS: Record<
     peligro: 'más de 26 ppm',
     nota: 'referencia OMS: promedio de 8 h ≤ 9 ppm',
   },
-  co2: { bueno: 'hasta 1000 ppm', precaucion: '1000 – 2000 ppm', peligro: 'más de 2000 ppm' },
+  co2: { bueno: 'hasta 1200 ppm', precaucion: '1200 – 2000 ppm', peligro: 'más de 2000 ppm' },
   uv: {
     bueno: '0 – 6',
     precaucion: '6 – 8 (alto)',

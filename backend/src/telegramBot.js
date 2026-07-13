@@ -369,7 +369,7 @@ const TEXTO_UMBRALES =
   `💧 <b>Humedad</b>: 🟢 70–95 % · 🟡 60–70 ó 95–98 % · 🔴 &lt;60 ó &gt;98 %\n` +
   `   (adaptada al clima de Iquitos: 80–95 % es lo normal)\n` +
   `☠️ <b>CO</b>: 🟢 hasta 9 ppm · 🟡 9–26 ppm · 🔴 más de 26 ppm\n` +
-  `🌫 <b>Calidad de aire</b>: 🟢 hasta 1000 ppm · 🟡 1000–2000 · 🔴 más de 2000\n` +
+  `🌫 <b>Calidad de aire</b>: 🟢 hasta 1200 ppm · 🟡 1200–2000 · 🔴 más de 2000\n` +
   `☀️ <b>Índice UV</b>: 🟢 0–6 · 🟡 6–8 · 🔴 más de 8 (escala OMS)`;
 
 const TEXTO_AYUDA =
