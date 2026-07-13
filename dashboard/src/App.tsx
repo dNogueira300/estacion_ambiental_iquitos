@@ -6,6 +6,7 @@ import { StatusBar } from './components/StatusBar';
 import { MetricTile } from './components/MetricTile';
 import { TimeSeriesPanel } from './components/TimeSeriesPanel';
 import { AlertHistory } from './components/AlertHistory';
+import { ThresholdsPanel } from './components/ThresholdsPanel';
 import { StationMap } from './components/StationMap';
 import { CommandPanel } from './components/CommandPanel';
 
@@ -51,9 +52,10 @@ export default function App() {
 
       <TimeSeriesPanel />
 
-      {/* El mapa se reactiva con SHOW_MAP cuando el firmware v2.6 traiga GPS */}
-      <div className={`grid grid-cols-1 gap-4 ${SHOW_MAP ? 'lg:grid-cols-2' : ''}`}>
+      {/* El mapa se reactiva con SHOW_MAP cuando haya posición real (GPS/WPS) */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <AlertHistory />
+        <ThresholdsPanel />
         {SHOW_MAP && <StationMap status={status.data} latest={latest.data} />}
       </div>
 

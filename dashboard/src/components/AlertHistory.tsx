@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { getAlerts, type Alerta } from '../lib/api';
 import { usePolling, useAhora } from '../hooks/usePolling';
-import { fmtDuracion, fmtFechaHora, fmtNumero } from '../lib/format';
+import { fmtDuracion, fmtFechaHora, fmtHace, fmtNumero } from '../lib/format';
 import { Skeleton } from './ui/Skeleton';
 
 type FiltroNivel = 'TODOS' | 'PRECAUCION' | 'PELIGRO';
@@ -97,8 +97,9 @@ export function AlertHistory() {
                   <BadgeNivel nivel={a.nivel_max} />
                   <span className="text-sm text-mist">{(a.causa ?? '').trim() || '—'}</span>
                   <span className="tabular ml-auto font-mono text-xs text-reed">
-                    {fmtDuracion(a.inicio_ts, a.fin_ts, ahora)}
-                    {activa ? ' · activa' : ''}
+                    {activa
+                      ? `activa · lleva ${fmtDuracion(a.inicio_ts, a.fin_ts, ahora)}`
+                      : `${fmtHace(a.inicio_ts, ahora)} · duró ${fmtDuracion(a.inicio_ts, a.fin_ts, ahora)}`}
                   </span>
                 </div>
                 <p className="tabular mt-1 font-mono text-xs text-reed">

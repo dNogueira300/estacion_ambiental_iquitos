@@ -53,6 +53,36 @@ export const UMBRALES: Record<MetricKey, Threshold> = {
   },
 };
 
+/**
+ * Rangos legibles para el panel de referencia (misma fuente que UMBRALES).
+ * Humedad: adaptada al clima de Iquitos (80–95 % es lo habitual).
+ */
+export const RANGOS: Record<
+  MetricKey,
+  { bueno: string; precaucion: string; peligro: string; nota?: string }
+> = {
+  temp: { bueno: 'hasta 33 °C', precaucion: '33 – 36 °C', peligro: 'más de 36 °C' },
+  hum: {
+    bueno: '70 – 95 %',
+    precaucion: '60 – 70 % ó 95 – 98 %',
+    peligro: 'menos de 60 % ó más de 98 %',
+    nota: 'adaptada al clima amazónico (80–95 % es lo normal en Iquitos)',
+  },
+  co: {
+    bueno: 'hasta 9 ppm',
+    precaucion: '9 – 26 ppm',
+    peligro: 'más de 26 ppm',
+    nota: 'referencia OMS: promedio de 8 h ≤ 9 ppm',
+  },
+  co2: { bueno: 'hasta 1000 ppm', precaucion: '1000 – 2000 ppm', peligro: 'más de 2000 ppm' },
+  uv: {
+    bueno: '0 – 6',
+    precaucion: '6 – 8 (alto)',
+    peligro: 'más de 8 (muy alto/extremo)',
+    nota: 'escala OMS; en Iquitos el mediodía suele superar 8',
+  },
+};
+
 export const METRICAS: {
   key: MetricKey;
   nombre: string;

@@ -149,6 +149,17 @@ export function TimeSeriesPanel() {
   const co2Visible = visibles.has('co2');
   const otrasVisibles = [...visibles].filter((k) => k !== 'co2');
 
+  // Formato de tick según la amplitud del rango: con más de 48 h las horas
+  // solas son ambiguas, se muestra día+hora
+  const spanMs = puntos.length > 1 ? puntos[puntos.length - 1].t - puntos[0].t : 0;
+  const fmtTick = (t: number) => {
+    const d = new Date(t);
+    if (spanMs > 48 * 3600 * 1000) {
+      return d.toLocaleDateString('es-PE', { day: '2-digit', month: 'short' });
+    }
+    return fmtHora(d.toISOString());
+  };
+
   function aplicarCustom() {
     if (!desdeInput || !hastaInput) return;
     setRango({ tipo: 'custom', desde: desdeInput, hasta: hastaInput });
@@ -268,9 +279,12 @@ export function TimeSeriesPanel() {
                 type="number"
                 domain={['dataMin', 'dataMax']}
                 scale="time"
-                tickFormatter={(t: number) => fmtHora(new Date(t).toISOString())}
+                tickFormatter={fmtTick}
                 stroke="var(--reed)"
                 tick={{ fontSize: 11, fontFamily: 'IBM Plex Mono' }}
+                minTickGap={64}
+                tickMargin={8}
+                interval="preserveStartEnd"
               />
               {otrasVisibles.length > 0 && (
                 <YAxis
@@ -327,7 +341,7 @@ export function TimeSeriesPanel() {
                 travellerWidth={10}
                 stroke="var(--azulejo)"
                 fill="var(--river-deep)"
-                tickFormatter={(t: number) => fmtHora(new Date(t).toISOString())}
+                tickFormatter={fmtTick}
               />
             </LineChart>
           </ResponsiveContainer>
