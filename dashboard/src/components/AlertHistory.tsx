@@ -35,7 +35,7 @@ export function AlertHistory() {
   }, [alertas, filtroNivel, desde]);
 
   return (
-    <section className="flex min-h-[380px] flex-col rounded-xl border border-edge bg-river-panel p-4 sm:p-5">
+    <section className="flex flex-col rounded-xl border border-edge bg-river-panel p-4 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-display text-lg font-medium text-mist sm:text-xl">
           Historial de alertas
@@ -65,7 +65,7 @@ export function AlertHistory() {
         </div>
       </div>
 
-      <div className="mt-3 flex-1 space-y-2 overflow-y-auto pr-1" style={{ maxHeight: 420 }}>
+      <div className="mt-3 max-h-[480px] space-y-2 overflow-y-auto pr-1">
         {loading ? (
           <>
             <Skeleton className="h-16 w-full" />

@@ -31,15 +31,14 @@ function Fila({
 
 export function ThresholdsPanel() {
   return (
-    <section className="flex min-h-[380px] flex-col rounded-xl border border-edge bg-river-panel p-4 sm:p-5">
-      <h2 className="font-display text-lg font-medium text-mist sm:text-xl">
-        Niveles de referencia
-      </h2>
+    <section className="rounded-xl border border-edge bg-river-panel p-4">
+      <h2 className="font-display text-lg font-medium text-mist">Niveles de referencia</h2>
       <p className="mt-1 text-xs text-reed">
-        Los mismos umbrales que usan la estación (LEDs) y las tarjetas de arriba.
+        Los mismos umbrales que usan la estación (LEDs) y las tarjetas de valores.
       </p>
 
-      <div className="mt-3 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+      {/* En el sidebar (xl) una columna; apilado en móvil/tablet, dos */}
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-1">
         {METRICAS.map((m) => {
           const r = RANGOS[m.key];
           return (
