@@ -60,7 +60,7 @@ const config = {
     token: process.env.TELEGRAM_BOT_TOKEN || '',
     chatId: process.env.TELEGRAM_CHAT_ID || '', // canal: '@nombre_canal' o '-100...'
     notificarPrecaucion: process.env.TELEGRAM_NOTIFICAR_PRECAUCION !== 'false',
-    dashboardUrl: process.env.DASHBOARD_URL || 'http://163.176.139.242:3000/',
+    dashboardUrl: process.env.DASHBOARD_URL || 'https://estacion-ambiental-iquitos.duckdns.org/',
     // Horas de los reportes diarios, en hora de Perú (America/Lima)
     horasReporte: (process.env.TELEGRAM_HORAS_REPORTE || '07:00,18:00')
       .split(',')

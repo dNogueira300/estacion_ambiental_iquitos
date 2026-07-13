@@ -26,7 +26,7 @@ ESP32 (Iquitos) ──MQTT──▶ Mosquitto (:1883) ──▶ Backend Node.js 
 | ------------ | ------------------------------------------------------------------------------------------ |
 | `firmware/`  | Sketches de Arduino para el ESP32 (v2.4 y v2.5)                                            |
 | `backend/`   | Servicio Node.js: ingesta MQTT → PostgreSQL + API REST + bot de Telegram (`backend/README.md`) |
-| `dashboard/` | Dashboard web (Vite + React + TS) — en producción en `http://163.176.139.242:3000/`        |
+| `dashboard/` | Dashboard web (Vite + React + TS) — en producción en `https://estacion-ambiental-iquitos.duckdns.org/` |
 
 **Canal de avisos:** [t.me/EstacionAmbientalIquitos](https://t.me/EstacionAmbientalIquitos) —
 alertas en vivo y reportes diarios (07:00 y 18:00). Consultas: chat privado con

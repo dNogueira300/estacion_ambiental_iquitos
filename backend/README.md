@@ -239,6 +239,25 @@ journalctl -u estacion-backend | grep telegram   # "[telegram] Bot activo (chat:
 # En chat privado con @EstacionIquitosBot: /estado responde la última lectura.
 ```
 
+## Dominio + HTTPS (Caddy + DuckDNS)
+
+El dashboard y la API se sirven con candado en
+**https://estacion-ambiental-iquitos.duckdns.org/** mediante un proxy Caddy en la VM:
+
+- Subdominio gratuito en [duckdns.org](https://www.duckdns.org) apuntando a la IP de la VM.
+- Puertos 80/443 abiertos en la Security List de Oracle y en iptables.
+- Caddy instalado desde su repo oficial; `/etc/caddy/Caddyfile`:
+
+  ```
+  estacion-ambiental-iquitos.duckdns.org {
+      reverse_proxy localhost:3000
+  }
+  ```
+
+- Caddy obtiene y **renueva solo** el certificado de Let's Encrypt, y redirige HTTP→HTTPS.
+- El acceso directo por IP (`http://163.176.139.242:3000/`) sigue funcionando.
+- Si la IP pública de la VM cambiara, actualizarla en duckdns.org (campo "current ip").
+
 ## Seguridad
 
 - `.env` y `node_modules/` están en `.gitignore`. **Nunca** commitear credenciales.
