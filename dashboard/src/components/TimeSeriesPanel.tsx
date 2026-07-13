@@ -282,9 +282,8 @@ export function TimeSeriesPanel() {
                 tickFormatter={fmtTick}
                 stroke="var(--reed)"
                 tick={{ fontSize: 11, fontFamily: 'IBM Plex Mono' }}
-                minTickGap={64}
+                minTickGap={56}
                 tickMargin={8}
-                interval="preserveStartEnd"
               />
               {otrasVisibles.length > 0 && (
                 <YAxis
