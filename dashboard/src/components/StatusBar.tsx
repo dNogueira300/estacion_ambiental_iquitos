@@ -1,7 +1,6 @@
 import type { Estado, Lectura } from '../lib/api';
 import { fmtCoord, fmtHace } from '../lib/format';
 import { colorNivel, etiquetaNivel, type Nivel } from '../lib/levels';
-import { DEFAULT_STATION_COORDS } from '../config';
 import { IconLuna, IconSol } from './ui/icons';
 import type { Tema } from '../hooks/useTheme';
 import { Skeleton } from './ui/Skeleton';
@@ -28,8 +27,7 @@ export function StatusBar({ status, latest, cargando, errorRed, ahora, tema, alt
       : { texto: 'DESCONECTADA', color: 'var(--reed)' };
 
   const nivel = (latest?.nivel as Nivel) || 'NORMAL';
-  const lat = status?.posicion?.lat ?? DEFAULT_STATION_COORDS[0];
-  const lon = status?.posicion?.lon ?? DEFAULT_STATION_COORDS[1];
+  const posicion = status?.posicion ?? null;
 
   return (
     <header className="rounded-xl border border-edge bg-river-panel px-5 py-4">
@@ -84,7 +82,9 @@ export function StatusBar({ status, latest, cargando, errorRed, ahora, tema, alt
             )}
             <span>{latest?.cal ? 'Calibrada' : latest ? 'Sin calibrar' : ''}</span>
             <span className="tabular font-mono">
-              Loreto · {fmtCoord(lat)}, {fmtCoord(lon)}
+              {posicion
+                ? `Loreto · ${fmtCoord(posicion.lat)}, ${fmtCoord(posicion.lon)}`
+                : 'Iquitos, Loreto'}
             </span>
             {latest && (
               <span style={{ color: colorNivel(nivel) }}>

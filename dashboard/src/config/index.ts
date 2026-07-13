@@ -69,6 +69,13 @@ export const METRICAS: {
 /** Centro de Iquitos: fallback cuando la API aún no reporta posición */
 export const DEFAULT_STATION_COORDS: [number, number] = [-3.7491, -73.2538];
 
+/**
+ * Mostrar el mapa. Apagado hasta que el firmware v2.6 traiga GPS y la API
+ * reporte la posición real (mientras tanto solo mostraría el fallback).
+ * Para reactivarlo: SHOW_MAP = true, rebuild y push.
+ */
+export const SHOW_MAP = false;
+
 /** Estación móvil (GPS, firmware v2.6): activa trayectoria y reencuadre */
 export const MOBILE_MODE = true;
 

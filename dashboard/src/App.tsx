@@ -1,7 +1,7 @@
 import { getLatest, getReadings, getStatus } from './lib/api';
 import { usePolling, useAhora } from './hooks/usePolling';
 import { useTheme } from './hooks/useTheme';
-import { POLL_INTERVAL_MS, METRICAS, STALE_MS } from './config';
+import { POLL_INTERVAL_MS, METRICAS, SHOW_MAP, STALE_MS } from './config';
 import { StatusBar } from './components/StatusBar';
 import { MetricTile } from './components/MetricTile';
 import { TimeSeriesPanel } from './components/TimeSeriesPanel';
@@ -51,9 +51,10 @@ export default function App() {
 
       <TimeSeriesPanel />
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      {/* El mapa se reactiva con SHOW_MAP cuando el firmware v2.6 traiga GPS */}
+      <div className={`grid grid-cols-1 gap-4 ${SHOW_MAP ? 'lg:grid-cols-2' : ''}`}>
         <AlertHistory />
-        <StationMap status={status.data} latest={latest.data} />
+        {SHOW_MAP && <StationMap status={status.data} latest={latest.data} />}
       </div>
 
       <CommandPanel status={status.data} ahora={ahora} onComandoEnviado={status.refresh} />
