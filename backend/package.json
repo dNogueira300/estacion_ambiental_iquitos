@@ -1,7 +1,7 @@
 {
   "name": "estacion-iquitos-backend",
   "version": "1.0.0",
-  "description": "Backend de la Estación Ambiental Inteligente de Iquitos: ingesta MQTT -> PostgreSQL + API REST",
+  "description": "Backend de la Estación Ambiental Automatizada de Iquitos: ingesta MQTT -> PostgreSQL + API REST",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",

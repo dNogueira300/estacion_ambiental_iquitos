@@ -70,7 +70,7 @@ export default function App() {
       </div>
 
       <footer className="pb-2 pt-1 text-center text-xs text-reed">
-        Estación Ambiental Inteligente · Iquitos, Loreto · datos abiertos para la ciudad
+        Estación Ambiental Automatizada · Iquitos, Loreto · datos abiertos para la ciudad
       </footer>
     </div>
   );

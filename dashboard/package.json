@@ -2,7 +2,7 @@
   "name": "estacion-iquitos-dashboard",
   "version": "1.0.0",
   "private": true,
-  "description": "Dashboard web de la Estación Ambiental Inteligente de Iquitos",
+  "description": "Dashboard web de la Estación Ambiental Automatizada de Iquitos",
   "type": "module",
   "scripts": {
     "dev": "vite",

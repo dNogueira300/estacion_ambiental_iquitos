@@ -1,4 +1,4 @@
-# Estación Ambiental Inteligente — Iquitos
+# Estación Ambiental Automatizada — Iquitos
 
 Sistema de monitoreo ambiental en tiempo real para Iquitos (Loreto, Perú) basado en ESP32.
 Mide **CO (MQ-7), calidad del aire (MQ-135), radiación UV (ML8511), temperatura y humedad (DHT22)**,

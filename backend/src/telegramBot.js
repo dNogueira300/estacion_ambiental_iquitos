@@ -373,7 +373,7 @@ const TEXTO_UMBRALES =
   `☀️ <b>Índice UV</b>: 🟢 0–6 · 🟡 6–8 · 🔴 más de 8 (escala OMS)`;
 
 const TEXTO_AYUDA =
-  `<b>Estación Ambiental Inteligente — Iquitos</b>\n` +
+  `<b>Estación Ambiental Automatizada — Iquitos</b>\n` +
   `Monitoreo en tiempo real de temperatura, humedad, CO, calidad del aire y ` +
   `radiación UV en Iquitos, Loreto. Datos abiertos para la ciudad.\n\n` +
   `Comandos:\n` +
