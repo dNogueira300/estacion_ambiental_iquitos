@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Tokens de tema (plan §2.2 y §2.6) ─────────────────────────────
+   Oscuro "río al anochecer" (por defecto) / claro "río al amanecer".
+   Todos los componentes consumen estas variables; nada hardcodeado. */
+:root,
+:root[data-theme='dark'] {
+  --river-deep: #0b1f24;
+  --river-panel: #122e34;
+  --reed: #6e8b8f;
+  --mist: #eaf4f2;
+  --canopy: #3fb98b;
+  --azulejo: #3a9bd8;
+  --sun: #e8b04b;
+  --clay: #e5533c;
+  --edge: #1d444d; /* bordes de paneles */
+  --glaze: rgba(234, 244, 242, 0.07); /* "glaseado": borde interior claro */
+  --tile-pattern-opacity: 0.5;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --river-deep: #edf3f2;
+  --river-panel: #ffffff;
+  --reed: #5b747a;
+  --mist: #0b1f24;
+  --canopy: #12946a;
+  --azulejo: #2a7fb8;
+  --sun: #b77e12;
+  --clay: #ce4130;
+  --edge: #d3dedd;
+  --glaze: rgba(11, 31, 36, 0.05);
+  --tile-pattern-opacity: 0.35;
+  color-scheme: light;
+}
+
+/* Transición suave al cambiar de tema */
+:root.theme-transition,
+:root.theme-transition * {
+  transition:
+    background-color 300ms ease,
+    border-color 300ms ease,
+    color 300ms ease;
+}
+
+html,
+body {
+  background-color: var(--river-deep);
+  color: var(--mist);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+}
+
+/* Valores de instrumento: los números no "bailan" al actualizarse */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Tarjeta "azulejo" (signature, plan §2.4) ──────────────────────
+   Guiño cerámico contenido: esquina con patrón azul/blanco + glaseado. */
+.azulejo-tile {
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 var(--glaze);
+}
+.azulejo-tile::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 56px;
+  height: 56px;
+  pointer-events: none;
+  opacity: var(--tile-pattern-opacity);
+  /* Patrón tipo azulejo: rombos concéntricos azul cerámica */
+  background-image:
+    radial-gradient(circle at 100% 0%, var(--azulejo) 6%, transparent 7%),
+    linear-gradient(135deg, transparent 44%, var(--azulejo) 45%, var(--azulejo) 47%, transparent 48%),
+    linear-gradient(45deg, transparent 44%, var(--azulejo) 45%, var(--azulejo) 47%, transparent 48%);
+  background-size: 28px 28px;
+  -webkit-mask-image: linear-gradient(225deg, black 0%, transparent 62%);
+  mask-image: linear-gradient(225deg, black 0%, transparent 62%);
+}
+
+/* ── Ripple del punto "en línea" (onda de agua, plan §2.4) ───────── */
+.ripple-dot {
+  position: relative;
+}
+.ripple-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid currentColor;
+  animation: ripple 2.4s ease-out infinite;
+}
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+/* Latido del episodio de alerta activo */
+.pulse-dot {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Skeletons de carga */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--edge) 25%,
+    var(--river-panel) 50%,
+    var(--edge) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ripple-dot::after,
+  .pulse-dot,
+  .skeleton {
+    animation: none;
+  }
+  :root.theme-transition,
+  :root.theme-transition * {
+    transition: none;
+  }
+}
+
+/* Foco de teclado visible en todos los controles */
+:focus-visible {
+  outline: 2px solid var(--azulejo);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Leaflet: que el mapa herede el tema */
+.leaflet-container {
+  background: var(--river-deep);
+  font-family: inherit;
+}
+:root[data-theme='dark'] .leaflet-tile {
+  /* teselas OSM adaptadas al anochecer */
+  filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.35) brightness(0.7);
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--river-panel);
+  color: var(--mist);
+}
+
+/* Marcador de estación (divIcon) */
+.station-marker {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  border: 3px solid var(--mist);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+}

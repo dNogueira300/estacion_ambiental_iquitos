@@ -65,6 +65,10 @@ function validarLectura(datos) {
     cal: typeof datos.cal === 'boolean' ? datos.cal : null,
     rssi: Number.isInteger(datos.rssi) ? datos.rssi : null,
     uptime: Number.isFinite(datos.uptime) ? Math.trunc(datos.uptime) : null,
+    // Posición opcional (estación móvil, firmware v2.6+). Sin validación de
+    // rango: una coordenada rara es dato, no error.
+    lat: Number.isFinite(datos.lat) ? datos.lat : null,
+    lon: Number.isFinite(datos.lon) ? datos.lon : null,
   };
 }
 
@@ -114,10 +118,11 @@ async function procesarLectura(payload) {
 
   try {
     await db.query(
-      `INSERT INTO lecturas (temp, hum, co, co2, uv, nivel, causa, cal, rssi, uptime)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      `INSERT INTO lecturas (temp, hum, co, co2, uv, nivel, causa, cal, rssi, uptime, lat, lon)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
       [lectura.temp, lectura.hum, lectura.co, lectura.co2, lectura.uv,
-       lectura.nivel, lectura.causa, lectura.cal, lectura.rssi, lectura.uptime]
+       lectura.nivel, lectura.causa, lectura.cal, lectura.rssi, lectura.uptime,
+       lectura.lat, lectura.lon]
     );
     estado.ultimaLecturaTs = new Date();
     console.log(

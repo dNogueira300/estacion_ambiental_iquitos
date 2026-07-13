@@ -7,6 +7,7 @@
  * Y el último mensaje retenido del topic de estado no es "offline".
  */
 const express = require('express');
+const db = require('../db');
 const { estado } = require('../mqttIngestor');
 
 const router = express.Router();
@@ -17,22 +18,34 @@ router.get('/health', (req, res) => {
   res.json({ ok: true });
 });
 
-router.get('/status', (req, res) => {
-  const ahora = Date.now();
-  const lecturaReciente =
-    estado.ultimaLecturaTs !== null &&
-    ahora - estado.ultimaLecturaTs.getTime() < UMBRAL_ONLINE_MS;
-  const online = lecturaReciente && estado.ultimoEstado !== 'offline';
+router.get('/status', async (req, res, next) => {
+  try {
+    const ahora = Date.now();
+    const lecturaReciente =
+      estado.ultimaLecturaTs !== null &&
+      ahora - estado.ultimaLecturaTs.getTime() < UMBRAL_ONLINE_MS;
+    const online = lecturaReciente && estado.ultimoEstado !== 'offline';
 
-  res.json({
-    online,
-    ultimaLectura: estado.ultimaLecturaTs,
-    ultimoEstado: estado.ultimoEstado,
-    ultimoEstadoTs: estado.ultimoEstadoTs,
-    mqttConectado: estado.mqttConectado,
-    ultimoResultadoComando: estado.ultimoResultadoComando,
-    ultimoResultadoComandoTs: estado.ultimoResultadoComandoTs,
-  });
+    // Última posición conocida (estación móvil). Robusto ante mensajes
+    // intercalados sin coordenadas: busca la última fila con lat/lon.
+    const pos = await db.query(
+      'SELECT lat, lon, ts FROM lecturas WHERE lat IS NOT NULL AND lon IS NOT NULL ORDER BY ts DESC LIMIT 1'
+    );
+    const posicion = pos.rows[0] || null;
+
+    res.json({
+      online,
+      ultimaLectura: estado.ultimaLecturaTs,
+      ultimoEstado: estado.ultimoEstado,
+      ultimoEstadoTs: estado.ultimoEstadoTs,
+      mqttConectado: estado.mqttConectado,
+      ultimoResultadoComando: estado.ultimoResultadoComando,
+      ultimoResultadoComandoTs: estado.ultimoResultadoComandoTs,
+      posicion,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

@@ -54,4 +54,24 @@ router.get('/readings', async (req, res, next) => {
   }
 });
 
+// Trayectoria de la estación móvil: puntos con coordenadas en la ventana dada
+router.get('/track', async (req, res, next) => {
+  try {
+    const horas = parseFloat(req.query.hours) || 24;
+    if (!(horas > 0)) {
+      return res.status(400).json({ error: 'Parámetro hours inválido' });
+    }
+    const r = await db.query(
+      `SELECT ts, lat, lon FROM lecturas
+       WHERE lat IS NOT NULL AND lon IS NOT NULL
+         AND ts >= now() - ($1 * INTERVAL '1 hour')
+       ORDER BY ts ASC LIMIT $2`,
+      [horas, config.api.maxRows]
+    );
+    res.json(r.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

@@ -1,0 +1,5 @@
+node_modules/
+*.log
+
+# El build SÍ se commitea (dashboard/dist): la VM de 1 GB no compila el
+# frontend, solo hace git pull y sirve la carpeta con express.static.

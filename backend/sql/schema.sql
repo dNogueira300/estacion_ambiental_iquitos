@@ -19,6 +19,11 @@ CREATE TABLE IF NOT EXISTS lecturas (
 
 CREATE INDEX IF NOT EXISTS idx_lecturas_ts ON lecturas (ts DESC);
 
+-- Posición de la estación (opcional: estación móvil con GPS, firmware v2.6+).
+-- Idempotente y sin bloqueo: seguro sobre la tabla en producción.
+ALTER TABLE lecturas ADD COLUMN IF NOT EXISTS lat REAL;
+ALTER TABLE lecturas ADD COLUMN IF NOT EXISTS lon REAL;
+
 -- Historial de episodios de alerta (un registro por episodio, no por mensaje)
 CREATE TABLE IF NOT EXISTS alertas (
   id         BIGSERIAL PRIMARY KEY,
