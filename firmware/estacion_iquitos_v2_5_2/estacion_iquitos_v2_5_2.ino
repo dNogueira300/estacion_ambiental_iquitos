@@ -14,11 +14,13 @@
  *      Los picos de pocos segundos siguen activando LED/buzzer
  *      locales, pero ya no abren episodios ni notifican en Telegram.
  *
- * ⚠ IMPORTANTE: tras flashear esta versión hay que RECALIBRAR
- *   (el R0 guardado por versiones anteriores no es comparable,
- *   porque ahora R0 se guarda ya normalizado por clima).
- *   Recalibrar en aire limpio y VENTILADO (exterior o ventana
- *   abierta, lejos de calle/cocina), con 20+ min de warmup.
+ * ⚠ NOTA DE CALIBRACION: al venir de v2.5 o anterior hay que
+ *   RECALIBRAR (desde v2.5.1 el R0 se guarda normalizado por clima
+ *   y no es comparable con el previo). Entre v2.5.1 y v2.5.2 NO
+ *   hace falta: la lógica de calibración no cambió y el R0 de la
+ *   NVS sigue siendo válido. Recalibrar siempre en aire limpio y
+ *   VENTILADO (exterior/ventana, lejos de calle/cocina), 20+ min
+ *   de warmup.
  * ============================================================
  */
 
@@ -627,7 +629,7 @@ void setup() {
   Serial.begin(115200);
   delay(500);
   Serial.println();
-  Serial.println("=== Estacion Ambiental Iquitos v2.5.1 (umbral aire 1200 + correccion climatica MQ-135) ===");
+  Serial.println("=== Estacion Ambiental Iquitos v2.5.2 (aire 1200 + comp. climatica MQ-135 + alertas confirmadas 30s) ===");
   Serial.println("Comandos serial:");
   Serial.println("  c = calibrar    r = borrar cal.   i = ver R0");
   Serial.println("  s = fin estab.  m = estado red    w = portal WiFi");
@@ -660,7 +662,7 @@ void setup() {
   digitalWrite(LED_ROJO, LOW);
 
   lcd.setCursor(0, 0);
-  lcd.print("Estacion v2.5.1");
+  lcd.print("Estacion v2.5.2");
   lcd.setCursor(0, 1);
   lcd.print("Conectando red..");
 
