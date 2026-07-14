@@ -1,13 +1,18 @@
 /*
  * ============================================================
- * Estación Ambiental Automatizada - Iquitos v2.5.1
- * v2.5 (comandos remotos + WiFiManager) con dos ajustes:
+ * Estación Ambiental Automatizada - Iquitos v2.5.2
+ * v2.5 (comandos remotos + WiFiManager) con tres ajustes:
  *   1. Umbral de PRECAUCION de calidad de aire: 1000 -> 1200 ppm
  *      (línea base local elevada cerca de la calle).
  *   2. Compensación climática del MQ-135 (modelo de G. Krocker):
  *      la resistencia Rs se normaliza por temperatura y humedad
  *      usando el DHT22, tanto al calibrar como al medir. Clave en
  *      Iquitos (80-95 % HR vs. 33 % HR de la hoja de datos).
+ *   3. (v2.5.2) Confirmación de alertas remotas: por MQTT solo se
+ *      publica un nivel sostenido >= 30 s (entrada y salida de
+ *      alerta), y se publica de inmediato al confirmarse el cambio.
+ *      Los picos de pocos segundos siguen activando LED/buzzer
+ *      locales, pero ya no abren episodios ni notifican en Telegram.
  *
  * ⚠ IMPORTANTE: tras flashear esta versión hay que RECALIBRAR
  *   (el R0 guardado por versiones anteriores no es comparable,
@@ -52,6 +57,9 @@ const char* TOPIC_RESULTADO = "estacion/iquitos/comandos/resultado"; // ACK opci
 
 // --- Intervalo de publicación ---
 #define PUBLISH_INTERVAL_MS   (60UL * 1000UL)   // 60 s
+
+// --- Confirmación de alertas remotas (v2.5.2) ---
+#define ALERTA_CONFIRM_MS     (30UL * 1000UL)   // nivel sostenido para publicar el cambio
 
 // ── Pines ──
 #define DHTPIN       4
@@ -145,6 +153,13 @@ bool estadoParpadeo = false;
 const unsigned long INTERVALO_PARPADEO = 400;
 
 String causaAlerta = "";
+
+// ── Nivel confirmado para MQTT (v2.5.2): LEDs/buzzer usan el nivel
+//    instantáneo; por red solo sale un nivel sostenido >= ALERTA_CONFIRM_MS ──
+NivelAlerta   nivelConfirmado = NORMAL;
+String        causaConfirmada = "OK";
+NivelAlerta   nivelCandidato  = NORMAL;
+unsigned long candidatoDesde  = 0;
 
 // ── Temporizadores de red ──
 unsigned long ultimaPublicacion = 0;
@@ -798,10 +813,34 @@ void loop() {
     digitalWrite(BUZZER_PIN, LOW);
   }
 
-  // ── Publicación MQTT cada 60 s ──
+  // ── Confirmación del nivel remoto (v2.5.2) ──
+  // Un cambio de nivel debe sostenerse ALERTA_CONFIRM_MS para publicarse
+  // (entrada y salida de alerta). Durante warmup/estabilización se
+  // reporta NORMAL para no abrir episodios falsos en el backend.
+  NivelAlerta nivelRemoto = (calibrado && estabilizado) ? nivel : NORMAL;
+  if (nivelRemoto != nivelCandidato) {
+    nivelCandidato = nivelRemoto;
+    candidatoDesde = millis();
+  } else if (nivelCandidato != nivelConfirmado &&
+             millis() - candidatoDesde >= ALERTA_CONFIRM_MS) {
+    nivelConfirmado = nivelCandidato;
+    causaConfirmada = causaAlerta;
+    Serial.print("[alerta] Nivel confirmado (>=30 s): ");
+    Serial.println(nombreNivel(nivelConfirmado));
+    publicarDatos(temperatura, humedad, co_ppm, aire_ppm, uv_index,
+                  nivelConfirmado, causaConfirmada);
+    ultimaPublicacion = millis();          // no duplicar con el tick de 60 s
+  }
+  if (nivelConfirmado != NORMAL && nivelRemoto == nivelConfirmado) {
+    causaConfirmada = causaAlerta;         // causa al día durante el episodio
+  }
+
+  // ── Publicación MQTT cada 60 s (siempre con el nivel confirmado) ──
   if (millis() - ultimaPublicacion >= PUBLISH_INTERVAL_MS) {
     ultimaPublicacion = millis();
-    publicarDatos(temperatura, humedad, co_ppm, aire_ppm, uv_index, nivel, causaAlerta);
+    String causaPub = (calibrado && estabilizado) ? causaConfirmada : causaAlerta;
+    publicarDatos(temperatura, humedad, co_ppm, aire_ppm, uv_index,
+                  nivelConfirmado, causaPub);
   }
 
   // ── Debug serial ──
@@ -816,6 +855,7 @@ void loop() {
   Serial.print(" CO2:");     Serial.print(aire_ppm, 0);
   Serial.print(" UV:");      Serial.print(uv_index, 1);
   Serial.print(" -> ");      Serial.print(nombreNivel(nivel));
+  Serial.print(" (conf:");   Serial.print(nombreNivel(nivelConfirmado)); Serial.print(")");
   Serial.print(" [");        Serial.print(causaAlerta);
   Serial.print("]");
   if (!calibrado) {
